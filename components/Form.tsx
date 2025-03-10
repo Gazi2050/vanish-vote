@@ -47,7 +47,7 @@ const Form: React.FC = () => {
                                 id="pollType"
                                 className="w-full p-3 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                             >
-                                <option value="" disabled selected className="text-gray-400">Select type</option>
+                                <option value=" " disabled selected className="text-gray-400">Select type</option>
                                 <option>Multiple Choice</option>
                                 <option>Single Choice</option>
                             </select>
