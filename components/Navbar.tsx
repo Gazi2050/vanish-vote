@@ -8,7 +8,7 @@ const Navbar = () => {
                 <div className="container mx-auto px-4 flex h-16 items-center justify-between">
                     <div className="flex items-center gap-2">
                         <AlignEndHorizontal className="h-6 w-6 text-purple-600" />
-                        <span className="text-xl font-bold">VanishVote</span>
+                        <span className="text-xl font-bold">Vanish vote</span>
                     </div>
                     <div className="flex items-center gap-4">
                         <Sun />
