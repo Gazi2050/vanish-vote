@@ -7,6 +7,8 @@ import { schema } from "@/constants/schema";
 import moment from 'moment';
 import { FormData } from "@/constants/type";
 import { parseDuration } from "@/lib/functions";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Form = () => {
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -18,7 +20,16 @@ const Form = () => {
         name: "options"
     });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+
+    const router = useRouter();
+
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        setIsSubmitting(true);
+        setSubmitError(null);
+        setSubmitSuccess(false);
 
         const expirationDuration = data.expirationTime;
         const expiresAt = moment().add(parseDuration(expirationDuration), 'milliseconds').toDate();
@@ -39,8 +50,33 @@ const Form = () => {
             isActive: true
         };
 
-        console.log(pollData);
+        try {
+            const response = await fetch('/api/create-poll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pollData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create poll');
+            }
+
+            const result = await response.json();
+            console.log('Poll created successfully:', result);
+            setSubmitSuccess(true);
+
+            // Redirect to the poll page
+            router.push(`/poll/${result.pollId}`);
+        } catch (error: any) {
+            console.error('Error submitting poll:', error);
+            setSubmitError(error.message || 'An error occurred while creating the poll');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
 
     return (
         <div className="flex justify-center items-center">
@@ -140,12 +176,17 @@ const Form = () => {
                         </label>
                     </div>
 
+                    {/* Feedback Messages */}
+                    {submitSuccess && <p className="text-green-500 text-sm mb-4">Poll created successfully!</p>}
+                    {submitError && <p className="text-red-500 text-sm mb-4">{submitError}</p>}
+
                     <div className="flex justify-end">
                         <button
                             type="submit"
-                            className="px-5 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600 transition"
+                            disabled={isSubmitting}
+                            className={`px-5 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600 transition ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            Create Poll
+                            {isSubmitting ? 'Creating...' : 'Create Poll'}
                         </button>
                     </div>
                 </form>
