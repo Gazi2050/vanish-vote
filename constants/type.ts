@@ -11,3 +11,9 @@ export interface FormData {
     expirationTime: string;
     hideResults?: boolean;
 }
+
+export interface RouteParams {
+    params: {
+        id: string;
+    };
+}
