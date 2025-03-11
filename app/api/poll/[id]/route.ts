@@ -3,11 +3,12 @@ import { connectDB } from "@/lib/connectDB";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
-export const GET = async (req: Request, { params }: { params: { id: string } }) => {
+export const GET = async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     try {
         const db = await connectDB();
+        const { id } = await params
         const pollCollection = db.collection("polls");
-        const query = { _id: new ObjectId(params.id) };
+        const query = { _id: new ObjectId(id) };
         const result = await pollCollection.findOne(query);
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
@@ -20,7 +21,7 @@ export const GET = async (req: Request, { params }: { params: { id: string } }) 
 };
 
 
-export const PUT = async (req: Request, { params }) => {
+export const PUT = async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params
     const update = await req.json();
     const db = await connectDB();

@@ -47,8 +47,8 @@ const PollPage = () => {
         fetchPollData();
     }, [id]);
 
+
     const handleOptionClick = (optionId) => {
-        // console.log(optionId)
         if (poll.pollType === "single-choice" && selectedOption === optionId) return;
 
         if (poll.pollType === "single-choice") {
@@ -58,7 +58,7 @@ const PollPage = () => {
         const { options } = updatedPoll
         const targetOption = options.find(option => option.optionId === optionId)
         targetOption.votes += 1
-        const { _id, ...pollData } = updatedPoll
+        const { ...pollData } = updatedPoll
         console.log(updatedPoll)
         fetch(`/api/poll/${id}`, {
             method: 'PUT',
@@ -89,7 +89,7 @@ const PollPage = () => {
                 </div>
 
                 <div className="mt-4">
-                    {poll.options?.length > 0 ? (
+                    {poll && poll.options?.length > 0 ? (
                         poll.options.map((option) => (
                             <div
                                 key={option.optionId}
