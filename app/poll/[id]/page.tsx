@@ -53,13 +53,16 @@ const PollPage = () => {
         if (poll.pollType === "single-choice") {
             setSelectedOption(optionId);
         }
-
-        const updatedPoll = { ...poll, selectedOption: optionId };  // Include the selectedOption in the updatedPoll
-
+        const updatedPoll = { ...poll, selectedOption: optionId };
+        const { options } = updatedPoll
+        const targetOption = options.find(option => option.optionId = optionId)
+        targetOption.votes += 1
+        const { _id, ...pollData } = updatedPoll
+        console.log(updatedPoll)
         fetch(`/api/poll/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedPoll),  // Send the updatedPoll object
+            body: JSON.stringify(pollData),
         })
             .then(response => response.json())
             .then(data => {

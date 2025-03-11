@@ -20,36 +20,20 @@ export const GET = async (req: Request, { params }: { params: { id: string } }) 
 };
 
 
-export const PUT = async (req: Request) => {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');  // Can still use searchParams to retrieve the ID
+export const PUT = async (req: Request, { params }) => {
+    const { id } = await params
     const update = await req.json();
     const db = await connectDB();
     const pollCollection = db.collection("polls");
-
-    if (!update) {
-        return NextResponse.json({ message: "nothing to update" });
-    }
-
-    if (id) {
-        const updatedDoc = {
-            $set: {
-                ...update,
-            },
-            $inc: {}
-        };
-
-        const optionId = update.selectedOption;
-        updatedDoc.$inc[`options.${optionId}.votes`] = 1;
-
-        const query = { _id: new ObjectId(id) };
-        const result = await pollCollection.updateOne(query, updatedDoc);
-
-        if (result.modifiedCount === 1) {
-            return NextResponse.json({ message: "Poll updated successfully" });
-        } else {
-            return NextResponse.json({ message: "No changes made" });
+    // console.log(update, id)
+    const query = { _id: new ObjectId(id) }
+    const updatedDoc = {
+        $set: {
+            ...update,
         }
     }
-    return NextResponse.json({ message: "Poll ID not found" });
+    const result = await pollCollection.updateOne(query, updatedDoc)
+    console.log(result)
+    return NextResponse.json(result)
+
 };
