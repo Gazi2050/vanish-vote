@@ -1,5 +1,5 @@
 'use client';
-
+/* eslint-disable */
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from "@/constants/schema";

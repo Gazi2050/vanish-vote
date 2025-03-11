@@ -1,9 +1,9 @@
-import { RouteParams } from "@/constants/type";
+
 import { connectDB } from "@/lib/connectDB";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
-export const GET = async (req: Request, { params }: RouteParams) => {
+export const GET = async (req: Request, { params }: { params: { id: string } }) => {
     try {
         const db = await connectDB();
         const pollCollection = db.collection("polls");

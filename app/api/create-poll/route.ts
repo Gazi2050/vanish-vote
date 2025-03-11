@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { connectDB } from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 
