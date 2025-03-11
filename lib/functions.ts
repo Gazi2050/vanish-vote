@@ -5,3 +5,10 @@ export const parseDuration = (durationString: string): number => {
     return 0;
 };
 
+export const formatTime = (duration) => {
+    return [
+        duration.hours().toString().padStart(2, '0'),
+        duration.minutes().toString().padStart(2, '0'),
+        duration.seconds().toString().padStart(2, '0')
+    ].join(':');
+};

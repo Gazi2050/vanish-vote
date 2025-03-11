@@ -15,3 +15,5 @@ export const featureData = [
         icon: "Share2",
     },
 ];
+
+export const baseURL = "http://localhost:3000";
