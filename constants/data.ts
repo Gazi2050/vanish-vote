@@ -16,4 +16,5 @@ export const featureData = [
     },
 ];
 
-export const baseURL = "http://localhost:3000";
+// export const baseURL = "http://localhost:3000";
+export const baseURL = "https://vanish-vote-bcwb.vercel.app/";
