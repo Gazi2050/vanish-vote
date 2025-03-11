@@ -3,9 +3,7 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from "@/constants/schema";
-import moment from 'moment';
 import { FormData } from "@/constants/type";
-import { parseDuration } from "@/lib/functions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "./InputField";
@@ -13,6 +11,9 @@ import SelectField from "./SelectField";
 import OptionsField from "./OptionsField";
 import CheckboxField from "./CheckboxField";
 import SubmitButton from "./SubmitButton";
+import moment from 'moment';
+import { parseDuration } from "@/lib/functions";
+
 
 const Form = () => {
     const { control, handleSubmit, formState: { errors }, register } = useForm<FormData>({
@@ -28,11 +29,27 @@ const Form = () => {
         setIsSubmitting(true);
         setSubmitError(null);
 
-        const expiresAt = moment().add(parseDuration(data.expirationTime), 'milliseconds').toDate();
+        const createdAt = new Date(); // Current date and time
+        const expirationDuration = parseDuration(data.expirationTime);
+
+        if (expirationDuration <= 0) {
+            setSubmitError('Invalid expiration time');
+            setIsSubmitting(false);
+            return;
+        }
+
+        const expiresAt = moment(createdAt).add(expirationDuration, 'milliseconds').toDate();
+        console.log('Created At:', createdAt);
+        console.log('Expires At:', expiresAt);
+
         const pollData = {
             ...data,
-            options: data.options.map((option, index) => ({ optionId: `option-${index}`, text: option.text, votes: 0 })),
-            createdAt: new Date(),
+            options: data.options.map((option, index) => ({
+                optionId: `option-${index}`,
+                text: option.text,
+                votes: 0
+            })),
+            createdAt,
             expiresAt,
             isResultsHidden: data.hideResults || false,
             reactions: { trending: 0, like: 0 },

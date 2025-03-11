@@ -3,8 +3,8 @@ import React from 'react';
 
 const Spinner = () => {
     return (
-        <div className='animate-spin'>
-            <Loader className='text-7xl' />
+        <div className='flex justify-center items-center mt-20'>
+            <Loader size={50} className='animate-spin' />
         </div>
     );
 };
