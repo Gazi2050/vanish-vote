@@ -48,14 +48,15 @@ const PollPage = () => {
     }, [id]);
 
     const handleOptionClick = (optionId) => {
+        // console.log(optionId)
         if (poll.pollType === "single-choice" && selectedOption === optionId) return;
 
         if (poll.pollType === "single-choice") {
             setSelectedOption(optionId);
         }
-        const updatedPoll = { ...poll, selectedOption: optionId };
+        const updatedPoll = { ...poll };
         const { options } = updatedPoll
-        const targetOption = options.find(option => option.optionId = optionId)
+        const targetOption = options.find(option => option.optionId === optionId)
         targetOption.votes += 1
         const { _id, ...pollData } = updatedPoll
         console.log(updatedPoll)
